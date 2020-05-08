@@ -3,5 +3,8 @@
     "compilerOptions": {
         "module": "esNext",
         "moduleResolution": "node"
+    },
+    "angularCompilerOptions": {
+        "enableIvy": false
     }
 }
