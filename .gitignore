@@ -1,0 +1,20 @@
+package-lock.json
+
+# NativeScriptnode_modules/
+hooks/
+platforms/
+src/**/*.js
+
+# Because I use pug
+*.html
+!src/index.html
+
+# compiled output
+/dist
+
+# dependencies
+/node_modules
+
+# System Files
+.DS_Store
+Thumbs.db
