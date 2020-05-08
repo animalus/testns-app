@@ -9,7 +9,7 @@ The master branch works and has some code for just opening a basic dialog.
 But if you check out the "side-drawer" branch...
 
 ```
-git checkout side-sideDrawer
+git checkout side-drawer
 ```
 
 ... and then super clean the project ...
