@@ -13,13 +13,13 @@ module.exports = {
         },
         "nativescript-ui-sidedrawer": {
             entryPoints: {
-                // ".": {
-                //     override: {
-                //         main: "./ui-sidedrawer.ios.js",
-                //         typings: "./index.d.ts"
-                //     },
-                //     ignoreMissingDependencies: true
-                // },
+                ".": {
+                    override: {
+                        main: "./ui-sidedrawer.ios.js",
+                        typings: "./index.d.ts"
+                    },
+                    ignoreMissingDependencies: true
+                },
                 angular: {
                     override: {
                         main: "./side-drawer-directives.js",

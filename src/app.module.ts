@@ -7,6 +7,7 @@ import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 
 import { DialogService } from "./services/dialog.service";
+import { ActionBarService } from "./services/actionbar.service";
 // import { ConfirmDialog } from "./services/confirm.dialog";
 import { HomeComponent } from "./home.component";
 
@@ -25,7 +26,7 @@ import { HomeComponent } from "./home.component";
     ],
     // declarations: [AppComponent, ConfirmDialog, HomeComponent],
     declarations: [AppComponent, HomeComponent],
-    providers: [DialogService],
+    providers: [ActionBarService, DialogService],
     // entryComponents: [ConfirmDialog],
     schemas: [NO_ERRORS_SCHEMA]
 })
