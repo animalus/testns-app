@@ -1,37 +1,20 @@
 # testns-app
 
-This is a test Nativescript app for testing out certain things for upgrading to angular 9 using nativescript.
+This is a test Nativescript app for testing out certain things for upgrading to angular 9 using nativescript. This was generated from Nathan Walker's suggested work-around to the fact that NativeScript team is not merging the Ivy compatible code making upgrades to angular 9 problematic and less than ideal. That pull request with work-around code is found [here](https://github.com/NativeScript/nativescript-angular/pull/2124).
 
-The master branch works and has some code for just opening a basic dialog.
+First off, it seems to be that everybody who contributed to the discussion on this pull request is by default an iOS person. Because after struggling for a while trying to get the work-around working for me, a default android developer using linux, I finally just decided to switch over to my MAC to try it out on iOS and it worked just as recorded. So that was a bit of a relief but not completely helpful in the long run. :)
 
-`tns run android --env.aot --no-hmr`
-
-But if you check out the "side-drawer" branch...
+Turns out that the main problem was the suggested flag `--env.aot`. If I remove that it works for me using linux/android. In addition, I don't seem to need it on the mac/ios either. So either, there is something in their test apps that need it that I'm not running into or it is not actually needed. In addition, the `--no-hmr` flag does not affect this test app. So the suggested method of running, namely`tns run android --env.aot --no-hmr` (technically the method was ios and not android but...), does not work for me with android. But if I simply do ...
 
 ```
-git checkout side-drawer
+tns run android
 ```
 
-... and then super clean the project ...
+... it works. Also note (at present) _no_ `ngcc.config.js` file needed.
 
-```
-rm -rf platforms/ hooks/ node_modules/ package-lock.json webpack.config.js
-```
+## --env.aot flag doesn't work for android
 
-... and then rerun the above command you should get as I do ...
-
-```
-ERROR in The target entry-point "side-drawer-directives" has missing dependencies:
- - ./..
-```
-
-... even though I believe I have followed all the recommendations in [here](https://github.com/NativeScript/nativescript-angular/pull/2124#issue-376409005).
-
-## UPDATE
-
-github user `kmmccafferty96` pointed me to `https://github.com/NativeScript/nativescript-ui-feedback/issues/1355#issuecomment-585782902`. This led me to edit the `node_modules/nativescript-ui-sidedrawer/angular/side-drawer-directive.js` and `node_modules/nativescript-ui-sidedrawer/angular/side-drawer-directive.d.ts` and replacing all (2 in each) occurrences of "./.." with "nativescript-ui-sidedrawer"
-
-and then I get ...
+With the `--env.aot` flag I get the following error at compilation time ...
 
 ```
 ERROR in node_modules/nativescript-ui-sidedrawer/angular/side-drawer-directives.d.ts:79:22 - error NG6002: Appears in the NgModule.imports of AppModule, but could not be resolved to an NgModule class.
@@ -41,7 +24,11 @@ This likely means that the library (nativescript-ui-sidedrawer/angular) which de
 79 export declare class NativeScriptUISideDrawerModule {
 ```
 
-so I added ...
+... and no addition of an `ngcc.config.js` file fixes the problem. NOTE: **No** `ngcc.config.js` file is currently needed in this test app (not even for the `nativescript-ui-sidedrawer` plugin), if the `--env.aot` flag is **not** set. The file I did try is in the repo but disabled by being renamed `ngcc.config.DISABLED.js`.
+
+## Ivy-less
+
+Go Ivy-less by adding the following to the tns.config.json file...
 
 ```
     "angularCompilerOptions": {
@@ -49,31 +36,30 @@ so I added ...
     }
 ```
 
-... to my tsconfig.tns.json file and I get ...
+... and then it **works** with the `--env.aot` flag but does _not_ work without it. i.e. the opposite of with Ivy. Without it I get...
 
 ```
-ERROR in Cannot determine the module for class ConfirmDialog in /home/ken/dev/animalus/test/testns-app/src/services/confirm.dialog.ts! Add ConfirmDialog to the NgModule to fix it.
-```
-
-... which led me to remember that I had commented out the usual adding of the ConfirmDialog component to the `app.module` declarations and entryComponents. **_Wait, Ivy doesn't need these defined to run (see master branch)?_**. So I un-commented the code so that the ConfirmDialog gets added to these properties (see app.module.ts) but now I get (and by the way I tested putting the above nativescript-ui-sidedrawer source back to its original state and I get the same, so I guess the edit not necessary if you have the enableIvy flag false setting BUT still same error here)...
-
-```
+System.err: An uncaught Exception occurred on "main" thread.
+System.err: Unable to start activity ComponentInfo{org.nativescript.nativescriptivy/com.tns.NativeScriptActivity}: com.tns.NativeScriptException: Calling js method onCreate failed
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
+System.err:
+System.err: StackTrace:
 System.err: java.lang.RuntimeException: Unable to start activity ComponentInfo{org.nativescript.nativescriptivy/com.tns.NativeScriptActivity}: com.tns.NativeScriptException: Calling js method onCreate failed
-System.err: TypeError: Cannot read property 'nativeView' of undefined
-System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2913)
-System.err: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3048)
-System.err: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:78)
-System.err: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:108)
-System.err: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:68)
-System.err: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1808)
-System.err: 	at android.os.Handler.dispatchMessage(Handler.java:106)
-System.err: 	at android.os.Looper.loop(Looper.java:193)
-System.err: 	at android.app.ActivityThread.main(ActivityThread.java:6669)
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
+System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3555)
+System.err: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3707)
+System.err: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:83)
+System.err: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:135)
+System.err: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:95)
+System.err: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2220)
+System.err: 	at android.os.Handler.dispatchMessage(Handler.java:107)
+System.err: 	at android.os.Looper.loop(Looper.java:237)
+System.err: 	at android.app.ActivityThread.main(ActivityThread.java:8016)
 System.err: 	at java.lang.reflect.Method.invoke(Native Method)
 System.err: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
-System.err: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:858)
+System.err: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1076)
 System.err: Caused by: com.tns.NativeScriptException: Calling js method onCreate failed
-System.err: TypeError: Cannot read property 'nativeView' of undefined
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
 System.err: 	at com.tns.Runtime.callJSMethodNative(Native Method)
 System.err: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1286)
 System.err: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1173)
@@ -81,9 +67,72 @@ System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1160)
 System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1138)
 System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1134)
 System.err: 	at com.tns.NativeScriptActivity.onCreate(NativeScriptActivity.java:19)
-System.err: 	at android.app.Activity.performCreate(Activity.java:7136)
-System.err: 	at android.app.Activity.performCreate(Activity.java:7127)
-System.err: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1271)
-System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2893)
+System.err: 	at android.app.Activity.performCreate(Activity.java:7957)
+System.err: 	at android.app.Activity.performCreate(Activity.java:7946)
+System.err: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1307)
+System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3530)
 System.err: 	... 11 more
 ```
+
+## Other Issues/Observations
+
+### entryComponents in Ivy not needed?
+
+In my test here of one dialog component I'm going to postulate that Ivy doesn't seem to need entryComponents defined in the module? If I don't declare ConfirmDialog in the app module nor declare it an entryComponent the app still works fine! But without Ivy it errors with either ...
+
+```
+System.err: An uncaught Exception occurred on "main" thread.
+System.err: Unable to start activity ComponentInfo{org.nativescript.nativescriptivy/com.tns.NativeScriptActivity}: com.tns.NativeScriptException: Calling js method onCreate failed
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
+System.err:
+System.err: StackTrace:
+System.err: java.lang.RuntimeException: Unable to start activity ComponentInfo{org.nativescript.nativescriptivy/com.tns.NativeScriptActivity}: com.tns.NativeScriptException: Calling js method onCreate failed
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
+System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3555)
+System.err: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3707)
+System.err: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:83)
+System.err: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:135)
+System.err: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:95)
+System.err: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2220)
+System.err: 	at android.os.Handler.dispatchMessage(Handler.java:107)
+System.err: 	at android.os.Looper.loop(Looper.java:237)
+System.err: 	at android.app.ActivityThread.main(ActivityThread.java:8016)
+System.err: 	at java.lang.reflect.Method.invoke(Native Method)
+System.err: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
+System.err: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1076)
+System.err: Caused by: com.tns.NativeScriptException: Calling js method onCreate failed
+System.err: Error: Can't resolve all parameters for ApplicationModule: (?).
+System.err: 	at com.tns.Runtime.callJSMethodNative(Native Method)
+System.err: 	at com.tns.Runtime.dispatchCallJSMethodNative(Runtime.java:1286)
+System.err: 	at com.tns.Runtime.callJSMethodImpl(Runtime.java:1173)
+System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1160)
+System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1138)
+System.err: 	at com.tns.Runtime.callJSMethod(Runtime.java:1134)
+System.err: 	at com.tns.NativeScriptActivity.onCreate(NativeScriptActivity.java:19)
+System.err: 	at android.app.Activity.performCreate(Activity.java:7957)
+System.err: 	at android.app.Activity.performCreate(Activity.java:7946)
+System.err: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1307)
+System.err: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3530)
+System.err: 	... 11 more
+```
+
+or
+
+```
+ERROR in Cannot determine the module for class ConfirmDialog in /home/ken/dev/animalus/test/testns-app/src/services/confirm.dialog.ts! Add ConfirmDialog to the NgModule to fix it.
+```
+
+... depending on whether or not `--env.aot` is set. The former being without.
+
+### Something else I ran into at some point
+
+Some other issues I got along the way in various test incarnations of settings was the following:
+
+```
+ERROR in The target entry-point "side-drawer-directives" has missing dependencies:
+ - ./..
+```
+
+github user `kmmccafferty96` pointed me to this [post](https://github.com/NativeScript/nativescript-ui-feedback/issues/1355#issuecomment-585782902). Whice led me to edit the `node_modules/nativescript-ui-sidedrawer/angular/side-drawer-directive.js` and `node_modules/nativescript-ui-sidedrawer/angular/side-drawer-directive.d.ts` and replacing all (2 in each) occurrences of "./.." with "nativescript-ui-sidedrawer"
+
+When I did that I got the same error as above (i.e. same error that I get when I turn on the `--env.aot` flag).
