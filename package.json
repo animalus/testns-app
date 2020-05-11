@@ -1,6 +1,6 @@
 {
     "nativescript": {
-        "id": "com.animalus.testns-app",
+        "id": "com.animalus.testnsapp",
         "tns-android": {
             "version": "6.4.0"
         },
