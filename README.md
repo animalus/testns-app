@@ -10,9 +10,13 @@ Turns out that the main problem was the suggested flag `--env.aot`. If I remove 
 tns run android
 ```
 
-... it works. Also note (at present) _no_ `ngcc.config.js` file needed.
+... it works.
 
-## --env.aot flag doesn't work for android
+UPDATE: I'm confused. Now I can get it to work with either the flag set OR the flag not set. But now I do have a proper ngcc.config.js file which I think needs to be both there for when you run an `npm i` AND run your own build? I don't know, but I did find it now necessary (for the nativescript-ui-sidedrawer) and now after getting it in place I can run with or without the aot flag.
+
+What I **think** was happening before is at some point I had the ngcc.config file in there. Did a full clean so that npm reinstalled and then in testing thought I could remove it because my subsequent tests I think I didn't go back to a full clean again and thus thought it was unnecessary.
+
+## What WAS happening when the --env.aot flag wasn't work for android was this
 
 With the `--env.aot` flag I get the following error at compilation time ...
 
