@@ -22,11 +22,11 @@
         "@angular/platform-browser-dynamic": "^9.1.4",
         "@angular/router": "^9.1.4",
         "@nativescript/angular": "https://github.com/nstudio/ns-ng/blob/master/nativescript-angular-9.0.0.tgz?raw=true",
+        "@nativescript/core": "~6.5.1",
         "@nativescript/theme": "2.3.0",
         "nativescript-angular": "https://github.com/nstudio/ns-ng/blob/master/nativescript-angular-compat.tgz?raw=true",
         "nativescript-ui-sidedrawer": "^8.0.1",
         "rxjs": "~6.5.4",
-        "tns-core-modules": "~6.5.0",
         "zone.js": "~0.10.3"
     },
     "devDependencies": {
