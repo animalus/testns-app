@@ -11,11 +11,11 @@ import { ActionBarService } from "./services/actionbar.service";
 import { ConfirmDialog } from "./services/confirm.dialog";
 import { HomeComponent } from "./home.component";
 
-// Uncomment and add to NgModule imports if you need to use two-way binding
-// import { NativeScriptFormsModule } from "nativescript-angular/forms";
-
-// Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
-// import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
+//
+// Color problem
+//
+import { HtmlView } from "@nativescript/core";
+console.log(HtmlView);
 
 @NgModule({
     bootstrap: [AppComponent],
