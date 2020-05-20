@@ -20,6 +20,7 @@ import { HomeComponent } from "./home.component";
 @NgModule({
     bootstrap: [AppComponent],
     imports: [
+        // NativeScriptFormsModule,
         NativeScriptModule,
         NativeScriptUISideDrawerModule,
         AppRoutingModule

@@ -2,19 +2,11 @@
 
 This is a test Nativescript app for testing out certain things for upgrading to angular 9 using nativescript. This was generated from Nathan Walker's suggested work-around to the fact that NativeScript team is not merging the Ivy compatible code making upgrades to angular 9 problematic and less than ideal. That pull request with work-around code is found [here](https://github.com/NativeScript/nativescript-angular/pull/2124).
 
-First off, it seems to be that everybody who contributed to the discussion on this pull request is by default an iOS person. Because after struggling for a while trying to get the work-around working for me, a default android developer using linux, I finally just decided to switch over to my MAC to try it out on iOS and it worked just as recorded. So that was a bit of a relief but not completely helpful in the long run. :)
-
-Turns out that the main problem was the suggested flag `--env.aot`. If I remove that it works for me using linux/android. In addition, I don't seem to need it on the mac/ios either. So either, there is something in their test apps that need it that I'm not running into or it is not actually needed. In addition, the `--no-hmr` flag does not affect this test app. So the suggested method of running, namely`tns run android --env.aot --no-hmr` (technically the method was ios and not android but...), does not work for me with android. But if I simply do ...
+Run the following ...
 
 ```
-tns run android
+tns run android --env.aot --no-hmr
 ```
-
-... it works.
-
-UPDATE: I'm confused. Now I can get it to work with either the flag set OR the flag not set. But now I do have a proper ngcc.config.js file which I think needs to be both there for when you run an `npm i` AND run your own build? I don't know, but I did find it now necessary (for the nativescript-ui-sidedrawer) and now after getting it in place I can run with or without the aot flag.
-
-What I **think** was happening before is at some point I had the ngcc.config file in there. Did a full clean so that npm reinstalled and then in testing thought I could remove it because my subsequent tests I think I didn't go back to a full clean again and thus thought it was unnecessary.
 
 ## What WAS happening when the --env.aot flag wasn't work for android was this
 
