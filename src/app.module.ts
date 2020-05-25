@@ -12,7 +12,11 @@ import { ConfirmDialog } from "./services/confirm.dialog";
 import { HomeComponent } from "./home.component";
 
 //
-// Color problem
+// This was simply added to test a problem I was having in another repo with the
+// compiler seemingly grabbing the wrong version of nativescript ui color. It
+// turned out to be an issue with the path in tsconfig.json. The entry ...
+//     "*": ["./node_modules/*"]
+// ... turned out to lead to the error. Simply removing the entry fixed the problem.
 //
 import { HtmlView } from "@nativescript/core";
 console.log(HtmlView);
