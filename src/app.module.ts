@@ -11,11 +11,15 @@ import { ActionBarService } from "./services/actionbar.service";
 import { ConfirmDialog } from "./services/confirm.dialog";
 import { HomeComponent } from "./home.component";
 
-// Uncomment and add to NgModule imports if you need to use two-way binding
-// import { NativeScriptFormsModule } from "nativescript-angular/forms";
-
-// Uncomment and add to NgModule imports if you need to use the HttpClient wrapper
-// import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
+//
+// This was simply added to test a problem I was having in another repo with the
+// compiler seemingly grabbing the wrong version of nativescript ui color. It
+// turned out to be an issue with the path in tsconfig.json. The entry ...
+//     "*": ["./node_modules/*"]
+// ... turned out to lead to the error. Simply removing the entry fixed the problem.
+//
+import { HtmlView } from "@nativescript/core";
+console.log(HtmlView);
 
 @NgModule({
     bootstrap: [AppComponent],
